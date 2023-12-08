@@ -1,4 +1,6 @@
-﻿namespace User_API.Models
+﻿using System.Text.Json.Serialization;
+
+namespace User_API.Models
 {
     public class User
     {
@@ -11,6 +13,7 @@
         private string _pseudo;
 
 
+        [JsonConstructor]
         public User(int id,string firstName, string lastName, string email, string password)
         {
             _id = id;

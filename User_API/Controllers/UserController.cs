@@ -30,6 +30,22 @@ namespace User_API.Controllers
 
             return Ok(user);
         }
+
+        [HttpPost]
+
+        public ActionResult<bool> CreateUser(User newUser) {
+            Console.WriteLine(newUser.LastName);
+            User u = new User(newUser.Id, newUser.FirstName, newUser.LastName, newUser.Email, newUser.Password);
+           
+            int userCountBeforeAdd = _fakeDbTableUser.Count();
+            _fakeDbTableUser.Add(u);
+
+            if (userCountBeforeAdd < _fakeDbTableUser.Count()) 
+                return Ok(true);
+
+            return BadRequest(false);
+        
+        }
     }
    
 }
