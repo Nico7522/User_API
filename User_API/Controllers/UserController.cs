@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using User_API.Mappers;
 using User_API.Models;
+using User_API.Models.DTO;
 using User_API.Utils;
 
 namespace User_API.Controllers
@@ -34,49 +36,36 @@ namespace User_API.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateUser(User newUser) {
-            User u = new(Method.IncrementId() ,newUser.FirstName, newUser.LastName, newUser.Email, newUser.Password);
+        public ActionResult CreateUser(UserCreateDTO newUser) {
+            User u = new(Method.IncrementId() ,newUser.FirstName, newUser.LastName, newUser.Email, newUser.Password, newUser.Pseudo);
            
             int userCountBeforeAdd = _fakeDbTableUser.Count;
             _fakeDbTableUser.Add(u);
 
             if (userCountBeforeAdd == _fakeDbTableUser.Count)
-                return BadRequest(false);
+                return BadRequest();
 
-            return Ok(true);
+            return Ok();
         
         }
 
         [HttpPut("{id}")]
-        public ActionResult UpdateUser(int id, User userToUpdate)
+        public ActionResult UpdateUser(int id, UserUpdateDTO userToUpdate)
         {
             int userPosition = _fakeDbTableUser.FindIndex(u => u.Id == id);
-            if (userPosition != -1)
-            {
-                _fakeDbTableUser[userPosition] = userToUpdate;
-                return BadRequest(false);
-            }
+            if (userPosition == -1)
+                return NotFound();
 
-            return Ok(true);
+            _fakeDbTableUser[userPosition] = userToUpdate.ToUser(id);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public ActionResult DeleteUser(int id)
         {
-            bool isDeleted = false;
-            int userCountBeforeDelete = _fakeDbTableUser.Count();
             User? userToDelete = _fakeDbTableUser.SingleOrDefault(u => u.Id == id);
-
-            if (userToDelete is null)
-            {
-                return NotFound(false);
-
-            } else
-            {
-                isDeleted = _fakeDbTableUser.Remove(userToDelete);
-            }
-
-            return isDeleted ? Ok(true) : BadRequest(false);
+            bool isDeleted = _fakeDbTableUser.Remove(userToDelete);
+            return isDeleted ? Ok() : BadRequest();
 
         }
     }

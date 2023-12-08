@@ -13,7 +13,7 @@ namespace User_API.Models
         private string _lastName;
         private string _email;
         private string _password;
-        private string _pseudo;
+        private string _pseudo; 
 
         #endregion
 
@@ -23,28 +23,24 @@ namespace User_API.Models
         public string LastName { get => _lastName; }
         public string Email { get => _email; }
         public string Password { get => _password; }
-        public string Pseudo { get => _pseudo; }
+        public string Pseudo { get => _pseudo; } 
 
         #endregion
 
         #region Ctor
 
         [JsonConstructor]
-        public User(int id, string firstName, string lastName, string email, string password)
+        public User(int id, string firstName, string lastName, string email, string password, string pseudo) 
         {
+            _id = id;
             _firstName = firstName;
             _lastName = lastName;
             _email = email;
             _password = password;
-            _pseudo = firstName.Substring(0, 2) + lastName.Substring(0, 2);
-            _id = id;
+            _pseudo = string.IsNullOrEmpty(pseudo) ? firstName.Substring(0, 2) + lastName.Substring(0, 2) : pseudo  ;
          
         }
 
-        public User(int id, string firstName, string lastName, string email, string password, string pseudo) : this(id, firstName, lastName, email, password)
-        {
-            _pseudo = pseudo;
-        }
 
         #endregion
 
