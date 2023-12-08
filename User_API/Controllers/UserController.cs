@@ -32,7 +32,6 @@ namespace User_API.Controllers
         }
 
         [HttpPost]
-
         public ActionResult<bool> CreateUser(User newUser) {
             Console.WriteLine(newUser.LastName);
             User u = new User(newUser.Id, newUser.FirstName, newUser.LastName, newUser.Email, newUser.Password);
@@ -45,6 +44,19 @@ namespace User_API.Controllers
 
             return BadRequest(false);
         
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult<bool> UpdateUser(int id, User userToUpdate)
+        {
+            int userPosition = _fakeDbTableUser.FindIndex(u => u.Id == id);
+            if (userPosition != -1)
+            {
+                _fakeDbTableUser[userPosition] = userToUpdate;
+                return Ok(true);
+            }
+
+            return BadRequest(false);
         }
     }
    
