@@ -58,6 +58,26 @@ namespace User_API.Controllers
 
             return BadRequest(false);
         }
+
+        [HttpDelete("{id}")]
+        public ActionResult<bool> DeleteUser(int id)
+        {
+            bool isDeleted = false;
+            int userCountBeforeDelete = _fakeDbTableUser.Count();
+            User? userToDelete = _fakeDbTableUser.SingleOrDefault(u => u.Id == id);
+
+            if (userToDelete is not null)
+            {
+                isDeleted = _fakeDbTableUser.Remove(userToDelete);
+
+            } else
+            {
+                return NotFound(false);
+            }
+
+            return isDeleted ? Ok(true) : BadRequest(false);
+
+        }
     }
    
 }
