@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using User_API.Models;
+using User_API.Utils;
 
 namespace User_API.Controllers
 {
@@ -32,14 +33,13 @@ namespace User_API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<bool> CreateUser(User newUser) {
-            Console.WriteLine(newUser.LastName);
-            User u = new User(newUser.Id, newUser.FirstName, newUser.LastName, newUser.Email, newUser.Password);
+        public ActionResult CreateUser(User newUser) {
+            User u = new(Method.IncrementId() ,newUser.FirstName, newUser.LastName, newUser.Email, newUser.Password);
            
-            int userCountBeforeAdd = _fakeDbTableUser.Count();
+            int userCountBeforeAdd = _fakeDbTableUser.Count;
             _fakeDbTableUser.Add(u);
 
-            if (userCountBeforeAdd < _fakeDbTableUser.Count()) 
+            if (userCountBeforeAdd < _fakeDbTableUser.Count) 
                 return Ok(true);
 
             return BadRequest(false);
@@ -47,7 +47,7 @@ namespace User_API.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<bool> UpdateUser(int id, User userToUpdate)
+        public ActionResult UpdateUser(int id, User userToUpdate)
         {
             int userPosition = _fakeDbTableUser.FindIndex(u => u.Id == id);
             if (userPosition != -1)
@@ -60,7 +60,7 @@ namespace User_API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<bool> DeleteUser(int id)
+        public ActionResult DeleteUser(int id)
         {
             bool isDeleted = false;
             int userCountBeforeDelete = _fakeDbTableUser.Count();
