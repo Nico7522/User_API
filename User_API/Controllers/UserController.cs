@@ -68,6 +68,70 @@ namespace User_API.Controllers
             return isDeleted ? Ok() : BadRequest();
 
         }
+
+        [HttpPatch("update/firstname/{id}")]
+        public ActionResult UpdateFirstName(int id, string newFirsName)
+        {
+
+            User? user = Method.FindUser(id);
+            if (user == null)
+                return BadRequest();
+
+
+            if (!user.Patch(newFirsName, user, "FirstName"))
+                return BadRequest();
+
+            return Ok();
+
+        }
+
+        [HttpPatch("update/lastname/{id}")]
+        public ActionResult UpdtaeLastName(int id, string newLastName)
+        {
+
+            User? user = Method.FindUser(id);
+            if (user == null)
+                return BadRequest();
+
+
+            if (!user.Patch(newLastName, user, "LastName"))
+                return BadRequest();
+
+            return Ok();
+
+        }
+
+        [HttpPatch("update/password/{id}")]
+        public ActionResult UpdatePassword(int id, string newPassword)
+        {
+
+            User? user = Method.FindUser(id);
+            if (user == null)
+                return BadRequest();
+
+
+          if(!user.Patch(newPassword, user, "Password"))
+                return BadRequest();
+
+          return Ok();
+
+        }
+
+        [HttpPatch("update/email/{id}")]
+        public ActionResult UpdateEmail(int id, string newEmail)
+        {
+
+            User? user = Method.FindUser(id);
+            if (user == null)
+                return BadRequest();
+
+
+            if (!user.Patch(newEmail, user, "Email"))
+                return BadRequest();
+
+            return Ok();
+
+        }
     }
    
 }
