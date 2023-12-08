@@ -15,10 +15,11 @@ namespace User_API.Controllers
         public ActionResult<IEnumerable<User>> GetAllUser()
         {
             IEnumerable<User> users = _fakeDbTableUser;
-            if (users != null)
-                return Ok(users);
+            if (users is null)
+                return NotFound();
 
-            return NotFound();
+            return Ok(users);
+
         }
 
         [HttpGet("{id}")]
@@ -39,10 +40,10 @@ namespace User_API.Controllers
             int userCountBeforeAdd = _fakeDbTableUser.Count;
             _fakeDbTableUser.Add(u);
 
-            if (userCountBeforeAdd < _fakeDbTableUser.Count) 
-                return Ok(true);
+            if (userCountBeforeAdd == _fakeDbTableUser.Count)
+                return BadRequest(false);
 
-            return BadRequest(false);
+            return Ok(true);
         
         }
 
@@ -53,10 +54,10 @@ namespace User_API.Controllers
             if (userPosition != -1)
             {
                 _fakeDbTableUser[userPosition] = userToUpdate;
-                return Ok(true);
+                return BadRequest(false);
             }
 
-            return BadRequest(false);
+            return Ok(true);
         }
 
         [HttpDelete("{id}")]
@@ -66,13 +67,13 @@ namespace User_API.Controllers
             int userCountBeforeDelete = _fakeDbTableUser.Count();
             User? userToDelete = _fakeDbTableUser.SingleOrDefault(u => u.Id == id);
 
-            if (userToDelete is not null)
+            if (userToDelete is null)
             {
-                isDeleted = _fakeDbTableUser.Remove(userToDelete);
+                return NotFound(false);
 
             } else
             {
-                return NotFound(false);
+                isDeleted = _fakeDbTableUser.Remove(userToDelete);
             }
 
             return isDeleted ? Ok(true) : BadRequest(false);
