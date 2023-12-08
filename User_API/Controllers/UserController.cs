@@ -18,8 +18,17 @@ namespace User_API.Controllers
                 return Ok(users);
 
             return NotFound();
-                
-            
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<User> GetUserById(int id)
+        {
+            User? user = _fakeDbTableUser.SingleOrDefault(u => u.Id == id);
+
+            if (user is null)
+                return NotFound("User not found");
+
+            return Ok(user);
         }
     }
    
